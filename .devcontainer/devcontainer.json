@@ -1,0 +1,35 @@
+{
+  "name": "CS 111",
+  "image": "harveymudd/cs111",
+
+  "customizations": {
+    "codespaces": {
+      "openFiles": []
+    },
+    "vscode": {
+      "extensions": ["scalameta.metals"],
+      "settings": {
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/usr/bin/zsh"
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+  "features": {
+    "desktop-lite": {
+      "password": "cs111",
+      "webPort": "6080",
+      "vncPort": "5901"
+    }
+  },
+  "portsAttributes": {
+    "6080": {
+      "label": "Application",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "forwardPorts": [6080]
+}
