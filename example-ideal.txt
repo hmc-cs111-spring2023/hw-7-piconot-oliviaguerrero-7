@@ -1,0 +1,28 @@
+GOINGNORTH (
+    if N clear go N      
+    else go E and switch to GOINGSOUTH
+)
+
+GOINGSOUTH (
+    if S clear go S
+    if S wall and E clear go E and switch to GOINGNORTH 
+    if S wall and E wall go W and switch to 3 
+)
+
+// going north!
+
+3 (
+    if W clear go S 
+    if W wall switch to GOINGSOUTH
+)
+
+/* going south :O oooo 
+
+wow */
+
+4 (
+    if N clear go N
+    if S clear go S 
+    if E clear go E 
+    if W clear go W
+)
