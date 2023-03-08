@@ -1,12 +1,12 @@
 import scala.util.parsing.combinator._
 
 import scala.collection.mutable.ListBuffer
+import io.Source
 
 import picolib._
 import picolib.maze._
 import picolib.semantics._
 import java.io.File
-
 
 
 
@@ -23,7 +23,7 @@ case class WallCondition (direction: MoveDirection, desc: RelativeDescription)
 case class ParsedRule(conds: List[WallCondition], effect: RuleEffect)
 case class ParsedState(state: State, rules: List[ParsedRule])
 
-object PicobotParser extends JavaTokenParsers with PackratParsers {
+object Pythobot extends JavaTokenParsers with PackratParsers {
     def direction: Parser[MoveDirection] = ("N" | "E" | "S" | "W") ^^ {
         case "N" => North
         case "E" => East
@@ -41,21 +41,24 @@ object PicobotParser extends JavaTokenParsers with PackratParsers {
     )
 
     def wallConditions: Parser[List[WallCondition]] = ( 
-        wallConditions ~ "and" ~ wallConditions ^^ { case l~"and"~r => l ++ r }
+        wallConditions ~ "and" ~ wallConditions ^^ { case l~"and"~r => r ++ l }
      |  direction <~ "wall" ^^ {case d => List(WallCondition(d, Blocked))}
      |  direction <~ "clear" ^^ {case d => List(WallCondition(d, Open))}
     )
 
     def rule: Parser[ParsedRule] = ( 
+        //These three are all identical, just "if".
         "else" ~ "if" ~> wallConditions ~ effects ^^ {case c~e => ParsedRule(c, e)}
      |  "if" ~> wallConditions ~ effects ^^ {case c~e => ParsedRule(c, e)}
+     |  "elif" ~> wallConditions ~ effects ^^ {case c~e => ParsedRule(c, e)}
+        //for else, we need to explicitly say there are 0 conditions.
      |  "else" ~> effects ^^ {case e => ParsedRule(List(), e)}
     )
 
     def rules: Parser[List[ParsedRule]] = rep1(rule)
 
     def state: Parser[ParsedState] = (
-        stringLiteral ~ "(" ~ rules ~ ")" ^^ {case s~"("~r~")" => ParsedState(State(s), r)}
+        stringLiteral ~ "(" ~ rules <~ ")" ^^ {case s~"("~r => ParsedState(State(s), r)}
     )
     def states: Parser[List[ParsedState]] = rep1(state)
 
@@ -99,14 +102,26 @@ object PicobotParser extends JavaTokenParsers with PackratParsers {
 
         returnRules.toList;
 
-    def parseString(input: String) = 
+    def parseString(input: String) : List[Rule] = 
         val parseResult = parseAll(states, input)
         parseResult match {
             case Success(result, next) => parsedToAPI(result)
-            case _ => ()
+            case _ => throw new Exception("TODO: Exception Handling")
         }   
 
-    def main(args: Array[String]) = parseString(args(0))
+
 
 }
 
+    //def main(args: Array[String]): Int = 
+        // Parse entire file into string
+        val file = Source.fromFile("src/main/scala/piconot/external/Empty.bot")
+        val input = try file.mkString finally file.close()
+        val rules = Pythobot.parseString(input)
+
+        val maze = Maze("resources/empty.txt")
+        object EmptyText extends TextSimulation(emptyMaze, rules)
+
+        //return 0
+
+// run "src/main/scala/piconot/external/Empty.bot" "resources/empty.txt"
