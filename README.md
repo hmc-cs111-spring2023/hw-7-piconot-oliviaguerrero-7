@@ -24,8 +24,8 @@ to talk with about language design and implementation issues._
         `example-ideal.txt`
 - [x] Choose whether you will implement your syntax as an internal or external DSL,
       then complete one of the following:
-  - [ ] Implement your new syntax as an external DSL, using parser combinators
-    - [ ] Add files, as needed, to implement your syntax
+  - [x] Implement your new syntax as an external DSL, using parser combinators
+    - [x] Add files, as needed, to implement your syntax
     - Include at least two example programs
       - [ ] `src/main/scala/piconot/external/Empty.bot`
       - [ ] `src/main/scala/piconot/external/RightHand.bot`
