@@ -32,7 +32,7 @@ object Pythobot extends JavaTokenParsers with PackratParsers {
     }
 
     def movement: Parser[Movement] = "go"~>direction ^^ {case d => Movement(d)}
-    def stateSwitch: Parser[StateSwitch] = "switch"~"to"~> stringLiteral ^^ {case s => StateSwitch(State(s))}
+    def stateSwitch: Parser[StateSwitch] = "switch"~"to"~> state ^^ {case s => StateSwitch(s)}
     def effects: Parser[RuleEffect] = (
         movement ~ "and" ~ stateSwitch ^^ {case m~"and"~s => RuleEffect(m,s)}
      |  stateSwitch ~ "and" ~ movement ^^ {case s~"and"~m => RuleEffect(m,s)}
@@ -40,11 +40,14 @@ object Pythobot extends JavaTokenParsers with PackratParsers {
      |  stateSwitch ^^ {case s => RuleEffect(Movement(StayHere), s)}
     )
 
-    def wallConditions: Parser[List[WallCondition]] = ( 
-        wallConditions ~ "and" ~ wallConditions ^^ { case l~"and"~r => r ++ l }
-     |  direction <~ "wall" ^^ {case d => List(WallCondition(d, Blocked))}
-     |  direction <~ "clear" ^^ {case d => List(WallCondition(d, Open))}
+    def wallCondition: Parser[WallCondition] = (
+        "and" ~> direction <~ "wall" ^^ {case d => WallCondition(d, Blocked)}
+     |  "and" ~> direction <~ "clear" ^^ {case d => WallCondition(d, Open)}
+     |  direction <~ "wall" ^^ {case d => WallCondition(d, Blocked)}
+     |  direction <~ "clear" ^^ {case d => WallCondition(d, Open)}
     )
+
+    def wallConditions: Parser[List[WallCondition]] = rep(wallCondition)
 
     def rule: Parser[ParsedRule] = ( 
         //These three are all identical, just "if".
@@ -55,13 +58,19 @@ object Pythobot extends JavaTokenParsers with PackratParsers {
      |  "else" ~> effects ^^ {case e => ParsedRule(List(), e)}
     )
 
-    def rules: Parser[List[ParsedRule]] = rep1(rule)
-
-    def state: Parser[ParsedState] = (
-        stringLiteral ~ "(" ~ rules <~ ")" ^^ {case s~"("~r => ParsedState(State(s), r)}
+    def rules: Parser[List[ParsedRule]] = ( 
+        "(" ~> rep1(rule) <~ ")"
     )
-    def states: Parser[List[ParsedState]] = rep1(state)
 
+    def parsedState: Parser[ParsedState] = (
+        state ~ rules ^^ {case s~r => ParsedState(s, r)}
+    )
+    def parsedStates: Parser[List[ParsedState]] = rep1(parsedState)
+
+    def state: Parser[State] = (
+        //regex for at least one alphanumeric character or underscore
+        """[a-zA-Z0-9_]+""".r ^^ {case s => State(s)}
+    )
     def wallsToSurroundings(wcs: List[WallCondition]): Surroundings =
         var north : RelativeDescription = Anything;
         var east : RelativeDescription = Anything;
@@ -103,10 +112,11 @@ object Pythobot extends JavaTokenParsers with PackratParsers {
         returnRules.toList;
 
     def parseString(input: String) : List[Rule] = 
-        val parseResult = parseAll(states, input)
+        val parseResult = parseAll(parsedStates, input)
         parseResult match {
             case Success(result, next) => parsedToAPI(result)
-            case _ => throw new Exception("TODO: Exception Handling")
+            case Failure(msg, _) => throw new Exception(msg)
+            case Error(msg, _) => throw new Exception(msg)
         }   
 
 

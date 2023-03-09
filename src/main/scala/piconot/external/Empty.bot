@@ -8,7 +8,7 @@ GOINGNORTH (
 )
 FILLINGSOUTH (
     if S clear go S
-    elif E clear go E and switch to FILLINGSOUTH
+    elif E clear go E and switch to FILLINGNORTH
     else switch to GOINGWEST
 )
 FILLINGNORTH (
