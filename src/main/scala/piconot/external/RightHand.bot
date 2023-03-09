@@ -1,0 +1,24 @@
+GOINGNORTH (
+    if E wall and N free go N
+    if E free go E and switch to GOINGEAST
+    else switch to GOINGWEST
+    else switch to GOINGSOUTH
+)
+
+GOINGWEST (
+    if N wall and W free go W
+    if N free go N and switch to GOINGNORTH
+    else switch to GOINGSOUTH
+)
+
+GOINGSOUTH (
+    if W wall and S free go S
+    if W free go W and switch to GOINGWEST
+    else switch to GOINGEAST
+)
+
+GOINGEAST (
+    if S wall and E free go E
+    if S free go S and switch to GOINGSOUTH
+    else switch to GOINGNORTH
+)

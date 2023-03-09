@@ -94,4 +94,4 @@ val rules = List(
 ////////////////////////////////////////////////////////////////////////////////
 
 // text-based simulation
-object EmptyText extends TextSimulation(emptyMaze, rules)
+// object EmptyText extends TextSimulation(emptyMaze, rules)

@@ -1,0 +1,18 @@
+GOINGWEST (
+    if W clear go W 
+    else switch to GOINGNORTH
+)
+GOINGNORTH (
+    if N clear go N 
+    else go S and switch to FILLINGSOUTH
+)
+FILLINGSOUTH (
+    if S clear go S
+    elif E clear go E and switch to FILLINGNORTH
+    else switch to GOINGWEST
+)
+FILLINGNORTH (
+    if N clear go N
+    elif E clear go E and switch to FILLINGSOUTH
+    else switch to GOINGWEST
+)

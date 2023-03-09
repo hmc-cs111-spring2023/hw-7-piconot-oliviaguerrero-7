@@ -18,7 +18,7 @@ lazy val picolib = RootProject(
 
 lazy val root = project
   .settings(
-    name := "Piconot" // you can change this to be the name of your language
+    name := "Pythobot" 
   )
   .in(file("."))
   .dependsOn(picolib)

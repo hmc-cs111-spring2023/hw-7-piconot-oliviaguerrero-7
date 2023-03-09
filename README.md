@@ -18,23 +18,17 @@ to talk with about language design and implementation issues._
 
 ## Checklist
 
-- [ ] Design a new syntax for Picobot
-  - [ ] Describe your design in `design.md`
-  - [ ] Before you implement the syntax, write the "empty room" program in
+- [x] Design a new syntax for Picobot
+  - [x] Describe your design in `design.md`
+  - [x] Before you implement the syntax, write the "empty room" program in
         `example-ideal.txt`
-- [ ] Choose whether you will implement your syntax as an internal or external DSL,
+- [x] Choose whether you will implement your syntax as an internal or external DSL,
       then complete one of the following:
-  - [ ] Implement your new syntax as an internal DSL
-    - [ ] Add files, as needed, to implement your syntax
-    - Include two example programs
-      - [ ] `src/main/scala/piconot/internal/Empty.scala`
-      - [ ] `src/main/scala/piconot/internal/RightHand.scala`
-    - [ ] Describe your implementation process in `evaluation.md`
-  - [ ] Implement your new syntax as an external DSL, using parser combinators
-    - [ ] Add files, as needed, to implement your syntax
+  - [x] Implement your new syntax as an external DSL, using parser combinators
+    - [x] Add files, as needed, to implement your syntax
     - Include at least two example programs
-      - [ ] `src/main/scala/piconot/external/Empty.bot`
-      - [ ] `src/main/scala/piconot/external/RightHand.bot`
+      - [x] `src/main/scala/piconot/external/Empty.bot`
+      - [x] `src/main/scala/piconot/external/RightHand.bot`
     - [ ] Provide instructions for how to run piconot in `build.md`
     - [ ] Describe your implementation process in `evaluation.md`
 - [ ] Give feedback on another design and implementation
@@ -78,42 +72,6 @@ In `src/main/scala/piconot/EmptyAPI.scala`, you will find a program that uses th
 library to create rules that solve the "empty room" problem. You can run this program
 by running `sbt run` in the root directory of the project. A text-based simulation will
 run in the terminal.
-
-## Syntax implementation: internal DSL
-
-If you choose to implement your syntax as an internal DSL, place your code for the
-internal implementation in the `piconot.internal` package. You can (and probably should)
-add new files to the implementation.
-
-### A running diary
-
-As you work, comment on your experience in the file `evaluation.md`. In particular, if you
-change your ideal syntax, you should describe what changed and why you made the change
-(e.g., your original idea was too hard to implement or it didn't match well with the
-library calls) You should also answer the following questions: On a scale of 1–10 (where
-10 is "a lot"), how much did you have to change your syntax? On a scale of 1–10 (where 10
-is "very difficult"), how difficult was it to map your syntax to the provided API?
-
-### Sample programs
-
-Include at least two sample programs.
-
-For the internal version, include the files:
-
-1. `src/main/scala/piconot/internal/Empty.scala`: a program in your internal
-   DSL that can solve the empty room. A file that describes an empty room is in
-   `resources/empty.txt`.
-
-2. `src/main/scala/piconot/internal/RightHand.scala`: a program in your
-   internal DSL that uses the right-hand rule to solve the maze in
-   `resources/maze.txt`.
-
-### Provide instructions for building and running your internal DSL
-
-In the `build.md` file provide instructions for how to run your internal DSL. (For
-example, `sbt run-main <classname>`) Ask for help if you're not sure how do so!
-
-**Make sure the build process works before your final submission!**
 
 ## Syntax implementation: external DSL
 
