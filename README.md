@@ -27,8 +27,8 @@ to talk with about language design and implementation issues._
   - [x] Implement your new syntax as an external DSL, using parser combinators
     - [x] Add files, as needed, to implement your syntax
     - Include at least two example programs
-      - [ ] `src/main/scala/piconot/external/Empty.bot`
-      - [ ] `src/main/scala/piconot/external/RightHand.bot`
+      - [x] `src/main/scala/piconot/external/Empty.bot`
+      - [x] `src/main/scala/piconot/external/RightHand.bot`
     - [ ] Provide instructions for how to run piconot in `build.md`
     - [ ] Describe your implementation process in `evaluation.md`
 - [ ] Give feedback on another design and implementation

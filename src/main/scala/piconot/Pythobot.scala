@@ -42,9 +42,15 @@ object Pythobot extends JavaTokenParsers with PackratParsers {
 
     def wallCondition: Parser[WallCondition] = (
         "and" ~> direction <~ "wall" ^^ {case d => WallCondition(d, Blocked)}
+     | "and" ~> direction <~ "blocked" ^^ {case d => WallCondition(d, Blocked)}
      |  "and" ~> direction <~ "clear" ^^ {case d => WallCondition(d, Open)}
+     |  "and" ~> direction <~ "free" ^^ {case d => WallCondition(d, Open)}
+     |  "and" ~> direction <~ "open" ^^ {case d => WallCondition(d, Open)}
      |  direction <~ "wall" ^^ {case d => WallCondition(d, Blocked)}
+     |  direction <~ "blocked" ^^ {case d => WallCondition(d, Blocked)}
      |  direction <~ "clear" ^^ {case d => WallCondition(d, Open)}
+     |  direction <~ "free" ^^ {case d => WallCondition(d, Open)}
+     |  direction <~ "open" ^^ {case d => WallCondition(d, Open)}
     )
 
     def wallConditions: Parser[List[WallCondition]] = rep(wallCondition)
@@ -60,6 +66,8 @@ object Pythobot extends JavaTokenParsers with PackratParsers {
 
     def rules: Parser[List[ParsedRule]] = ( 
         "(" ~> rep1(rule) <~ ")"
+    // | "(" ~ ")" ^^ Error("One of your states has zero rules!", ) //IDK how to access unparsed string
+    // |  "(" ^^ Error("One of your states is missing a close parenthesis!")
     )
 
     def parsedState: Parser[ParsedState] = (
@@ -125,13 +133,11 @@ object Pythobot extends JavaTokenParsers with PackratParsers {
 
     //def main(args: Array[String]): Int = 
         // Parse entire file into string
-        val file = Source.fromFile("src/main/scala/piconot/external/Empty.bot")
+        val file = Source.fromFile("src/main/scala/piconot/external/RightHand.bot")
         val input = try file.mkString finally file.close()
         val rules = Pythobot.parseString(input)
 
-        val maze = Maze("resources/empty.txt")
-        object EmptyText extends TextSimulation(emptyMaze, rules)
+        val maze = Maze("resources/maze.txt")
+        object EmptyText extends TextSimulation(maze, rules)
 
         //return 0
-
-// run "src/main/scala/piconot/external/Empty.bot" "resources/empty.txt"
